@@ -63,7 +63,6 @@ describe("token", () => {
       }
     ]);
 
-    //console.log("reduce")
     await tester.contract.reduce({ account: "user1", quantity: '80.00 HYPHA', memo: '' })
 
     expect(tester.getTableRowsScoped(`accounts`)[`user1`]).toEqual([
