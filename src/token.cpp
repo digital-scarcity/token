@@ -71,8 +71,8 @@ void token::reduce( const name& account, const asset& quantity )
 
     sub_balance(account, quantity);
 
-    statstable.modify(sitr, from, [&](auto& stats) {
-        stats.supply -= quantity;
+    statstable.modify( st, same_payer, [&]( auto& s ) {
+        s.supply -= quantity;
     });
 }
 

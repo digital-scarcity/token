@@ -62,7 +62,8 @@
           * @param account - owner of balance,
           * @param quantity - the quantity of tokens to reduce
           */
-         void token::reduce( const name& account, const asset& quantity )
+         [[eosio::action]]
+         void reduce( const name& account, const asset& quantity );
 
          /**
           * Allows `from` account to transfer to `to` account the `quantity` tokens.
