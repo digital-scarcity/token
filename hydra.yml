@@ -1,0 +1,7 @@
+contracts:
+  token:
+    abi: build/token/token.abi
+    fixturesDir: tests/fixtures/token
+    name: token
+    wasm: build/token/token.wasm
+options: null
