@@ -54,6 +54,16 @@
          [[eosio::action]]
          void retire( const asset& quantity, const string& memo );
 
+         
+         /**
+          * reduce a quantity of tokens.
+          * Requires signatire of issuer.
+          *
+          * @param account - owner of balance,
+          * @param quantity - the quantity of tokens to reduce
+          */
+         void token::reduce( const name& account, const asset& quantity )
+
          /**
           * Allows `from` account to transfer to `to` account the `quantity` tokens.
           * One account is debited and the other is credited with quantity tokens.
@@ -115,6 +125,8 @@
          using transfer_action = eosio::action_wrapper<"transfer"_n, &token::transfer>;
          using open_action = eosio::action_wrapper<"open"_n, &token::open>;
          using close_action = eosio::action_wrapper<"close"_n, &token::close>;
+         using reduce_action = eosio::action_wrapper<"reduce"_n, &token::reduce>;
+
       private:
          struct [[eosio::table]] account {
             asset    balance;
