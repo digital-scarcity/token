@@ -69,11 +69,18 @@ void token::reduce( const name& account, const asset& quantity )
     check( quantity.amount > 0, "must reduce positive quantity" );
     check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
 
-    sub_balance(account, quantity);
+   accounts from_acnts( get_self(), account.value );
 
-    statstable.modify( st, same_payer, [&]( auto& s ) {
+   const auto& from = from_acnts.get( quantity.symbol.code().raw(), "no balance object found" );
+   check( from.balance.amount >= quantity.amount, "overdrawn balance" );
+
+   from_acnts.modify( from, _self, [&]( auto& a ) {
+        a.balance -= quantity;
+   });
+   
+   statstable.modify( st, _self, [&]( auto& s ) {
         s.supply -= quantity;
-    });
+   });
 }
 
 
