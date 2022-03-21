@@ -12,6 +12,24 @@ cleos create account hypha husd.hypha EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuG
 cleos set contract token.hypha build/token -p token.hypha@active
 cleos set contract husd.hypha build/token -p husd.hypha@active
 cleos set contract dao.hypha ../dao-contracts/build/dao -p dao.hypha@active
+cleos set account permission --add-code dao.hypha active
+
+# cleos set contract dao.hypha build/dao -p dao.hypha@active
+
+cleos push action dao.hypha createroot '{ 
+	"notes":"test root"
+}' -p dao.hypha@active
+
+cleos push action dao.hypha setsetting '{ 
+	"key":"hypha_usd_value",
+	"value":["asset","0.5000 USD"]
+}' -p dao.hypha@active
+
+cleos push action dao.hypha setsetting '{ 
+	"key":"hypha_token_contract",
+	"value":["name","token.hypha"]
+}' -p dao.hypha@active
+
 
 # issue
         #  void create( const name&   issuer,
