@@ -53,6 +53,37 @@ void token::issue( const name& to, const asset& quantity, const string& memo )
     add_balance( st.issuer, quantity, st.issuer );
 }
 
+void token::reduce( const name& account, const asset& quantity )
+{
+    auto sym = quantity.symbol;
+    check( sym.is_valid(), "invalid symbol name" );
+
+    stats statstable( get_self(), sym.code().raw() );
+    auto existing = statstable.find( sym.code().raw() );
+    check( existing != statstable.end(), "token with symbol does not exist" );
+    const auto& st = *existing;
+
+    require_auth( st.issuer );
+
+    check( quantity.is_valid(), "invalid quantity" );
+    check( quantity.amount > 0, "must reduce positive quantity" );
+    check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+
+   accounts from_acnts( get_self(), account.value );
+
+   const auto& from = from_acnts.get( quantity.symbol.code().raw(), "no balance object found" );
+   check( from.balance.amount >= quantity.amount, "overdrawn balance" );
+
+   from_acnts.modify( from, _self, [&]( auto& a ) {
+        a.balance -= quantity;
+   });
+   
+   statstable.modify( st, _self, [&]( auto& s ) {
+        s.supply -= quantity;
+   });
+}
+
+
 void token::retire( const asset& quantity, const string& memo )
 {
     auto sym = quantity.symbol;
